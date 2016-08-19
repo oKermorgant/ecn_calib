@@ -1,12 +1,8 @@
 #ifndef CAMERA_GENERIC_H
 #define CAMERA_GENERIC_H
 
-
-#include <visp/vpFeatureBuilder.h>
 #include <visp/vpPoint.h>
 #include <visp/vpMatrix.h>
-#include <visp/vpSubMatrix.h>
-#include <vector>
 #include <opencv2/core/core.hpp>
 
 
@@ -17,7 +13,7 @@ class GenericCamera
 {
 public:
 
-    vpColVector xi_, xi0_;
+    vpColVector xi_;
 
     GenericCamera() {}
     // get the number of intrinsic parameters

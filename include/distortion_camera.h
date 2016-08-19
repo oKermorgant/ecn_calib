@@ -18,21 +18,15 @@ public:
     DistortionCamera(const double &_px, const double &_py, const double &_u0, const double &_v0, const double &_alpha, const double &_beta)
     {
         dPdX_.resize(2,3);
-        xi0_.resize(6);
-        xi0_[0] = _px;
-        xi0_[1] = _py;
-        xi0_[2] = _u0;
-        xi0_[3] = _v0;
-        xi0_[4] = _alpha;
-        xi0_[5] = _beta;
-        reset();
+        xi_.resize(6);
+        xi_[0] = _px;
+        xi_[1] = _py;
+        xi_[2] = _u0;
+        xi_[3] = _v0;
+        xi_[4] = _alpha;
+        xi_[5] = _beta;
     }
 
-    // reset to initial value
-    inline void reset()
-    {
-        xi_ = xi0_;
-    }
 
     // compute pixel coordinates of a 3D point
     // we assume the point is already in the camera frame
@@ -56,6 +50,7 @@ public:
         _J.resize(2,6);
         _J[0][0] = _P.get_X()*nu_inv;                                                                       // du/dpx
         _J[1][1] = _P.get_Y()*nu_inv;                                                                       // dv/dpy
+        _J[0][2] = _J[1][3] = 1;                                                                            // du/du0, dv/dv0
         _J[0][4] = xi_[0]*_P.get_X()*(_P.get_Z()-rho)*nu_inv*nu_inv;                                        // du/dalpha
         _J[1][4] = xi_[1]*_P.get_Y()*(_P.get_Z()-rho)*nu_inv*nu_inv;                                        // dv/dalpha
         _J[0][5] = -0.5*xi_[0]*_P.get_X()*xi_[4]*(_P.get_X()*_P.get_X()+_P.get_Y()*_P.get_Y())*nu2rho_inv;  // du/dbeta
@@ -91,9 +86,11 @@ public:
         xi_ += _dxi;
 
         // all parameters should be positive
-        for(auto &v : xi_)
-            if(v < 0)
-                v = 0;
+        for(int i = 0;i<6;++i)
+        {
+            if(xi_[i] < 0)
+                xi_[i] = 0;
+        }
         // alpha should be lesser than 1
         if(xi_[4] > 1)
             xi_[4] = 1;

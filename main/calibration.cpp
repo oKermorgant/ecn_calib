@@ -14,115 +14,69 @@
 
 #include <vvs.h>
 #include <grid_tracker.h>
+#include <perspective_camera.h>
+#include <distortion_camera.h>
 
-using namespace std;
-using namespace cv;
+using std::cout;
+using std::endl;
+using std::string;
+using std::vector;
+using std::stringstream;
+
+using cv::waitKey;
 using namespace covis;
 
 int main()
 {
-    vector<cv::Mat> im, im_all;
-    cv::Mat im_k,im_tmp;
-    vector<string> window, window_all;
-    vector<vector<cv::Point> > cog, cog_all;
-    vector<cv::Point> cog_k;
-    vpHomogeneousMatrix Mreal1,Mtmp;
-    vector<vpHomogeneousMatrix> Mreal;
+    // load calibration images from hard drive
+    const string base = "../images/";
+    const string prefix = "img";
 
-    const unsigned int r = 8;
-    const unsigned int c = 5;
+    // init empty vector of detected patterns
+    vector<Pattern> patterns;
+    patterns.clear();
+    patterns.reserve(6);
 
-    // load images and estimated pose
-    string base = "../robot-images/";
-    ifstream posefile((base+"robot_calib_2.txt").c_str());
-    string line, imfile;
-    if(posefile.is_open())
+    // this tracker detects a 6x6 grid of points
+    GridTracker tracker;
+
+    // read images while the corresponding file exists
+    // images are displayed to ensure the detection was performed
+    while(true)
     {
-        int count = 0;
-        while(std::getline(posefile, line))
+        stringstream ss;
+        ss << prefix << patterns.size() << ".jpg";
+        std::ifstream testfile(base + ss.str());
+        if(testfile.good())
         {
-            if(count == 0) {}
-            else if(count == 1)
-                ReadMatrix(line, Mreal1);
-            else
-            {
-                // try to read image
-                stringstream ss(line);
-                ss >> imfile;
-                cout << "Loading " << base+imfile << endl;
-                im_tmp = cv::imread(base+imfile);
-
-                if(cv::findChessboardCorners(im_tmp, Size(r,c), cog_k, cv::CALIB_CB_ADAPTIVE_THRESH))
-                {
-                    //  DrawSeq(imfile, im_tmp, cog_k);
-                    //  cv::waitKey(0);
-
-                    // save variables
-                    im_all.resize(im_all.size()+1);
-                    im_tmp.copyTo(im_all[im_all.size()-1]);
-                    cog_all.push_back(cog_k);
-                    window_all.push_back(imfile);
-
-                    // read corresponding matrix
-                    ReadMatrix(ss, Mtmp);
-                    Mtmp = Mtmp*Mreal1.inverse();
-                    Mreal.push_back(Mtmp);
-                }
-                else
-                    cout << "no chessboard found" << endl;
-            }
-            if(count++ > 10)
-                //break;
-                1;
-
+            testfile.close();
+            Pattern pat;
+            pat.im =  cv::imread(base + ss.str());
+            tracker.detect(pat.im, pat.point, false);
+            pat.window = ss.str();
+            // draw extraction results
+            drawSeq(pat.window, pat.im, pat.point);
+            patterns.push_back(pat);
+            waitKey(0);
         }
+        else
+            break;
     }
+    cout << "Found " << patterns.size() << " images" << endl;
 
-    // calibrate from random images
-    unsigned int keep = 10;
-    vector<unsigned int> idx;idx.clear();
-    unsigned int k = rand()%im_all.size();
-    cog.resize(keep);
-    im.resize(keep);
-    window.resize(keep);
-    cout << "calibrating from: ";
-    for(unsigned int i=0;i<keep;++i)
-    {
-        while(std::find(idx.begin(),idx.end(),k) != idx.end())
-            k = rand()%im_all.size();
-        cog[i] = cog_all[k];
-        im_all[k].copyTo(im[i]);
-        window[i] = window_all[k];
-        //   DrawSeq(window[i], im[i], cog[i]);
-        idx.push_back(k);
-        cout << window[i] << " ";
-        //   cv::waitKey(0);
-    }
-    cout << endl;
+    // create a camera model (Perspective or Distortion)
+    // default parameters should be guessed from image dimensions
+    PerspectiveCamera cam(1,1,1,1);
 
+    // initiate virtual visual servoing with inter-point distance and pattern dimensions
+    VVS vvs(cam, 0.03, 6, 6);
 
-    // initiate calibrator
-    VVS vvs(0.03, r,c);
-
-    // minim...
-    // camera model with default parameters
-    const double pxy = 0.5*(im[0].rows+im[0].cols);
-    //PerspectiveCamera cam(pxy, pxy, 0.5*im[0].cols, 0.5*im[0].rows);
-    DistortionCamera cam(pxy, pxy, 0.5*im[0].cols, 0.5*im[0].rows, 0, 1);
-    vvs.cam(cam);
-
-    // display info during minimization
-    vvs.SetDisplay(window, im);
-
-    // calib from all images
-    vvs.Calib(cog);
-
-    // display results
-    vvs.Display();
+    // calibrate from all images
+    vvs.calibrate(patterns);
 
     // print results
-    cout << "Intrinsic: " << cam.xi_.t() << endl;
-    cout << "Max reprojection error: " << dmax << " pixels" << endl;
 
+
+    // this will wait for a key pressed to stop the program
     waitKey(0);
 }
