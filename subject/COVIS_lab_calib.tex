@@ -59,7 +59,7 @@ where $\sd$ regroups the desired pixel coordinates of the interest points in eac
 and where $\s(\xii, (\M_i)_i)$ is the pixel coordinates of the known 3D points when projected with intrinsic parameters $\xii$ and camera poses $(\M_i)_i$.
 
 
-From an estimation of $\xii$ and $(\M_i)_i)$, the 3D point $\X({}^o X,{}^o Y,{}^o Z)$ whom coordinates are expressed in the object frame $\Frame{o}$ can easily be projected in pixel coordinates.
+From an estimation of $\xii$ and $(\M_i)_i$, the 3D point $\X({}^o X,{}^o Y,{}^o Z)$ whom coordinates are expressed in the object frame $\Frame{o}$ can easily be projected in pixel coordinates.
 The coordinates of $\X$ in the camera frame yield:
 \begin{equation}\label{eq:framechange}
  \left[\begin{array}{c}{}^c\X\\1\end{array}\right]=   \left[\begin{array}{c}X\\Y\\Z\\1\end{array}\right] =\M_i\left[\begin{array}{c}\X\\1\end{array}\right]
@@ -76,9 +76,9 @@ For a classical perspective camera model, we have $\xii = (p_x, p_y, u_0, v_0)$ 
 From \eqref{eq:framechange} and \eqref{eq:projection} the full projection function $\s(\xii, (\M_i)_i)$ can be defined.\\ 
 
 \eqref{eq:calib} can then be resolved from an initial guess on $\xii$ and $(\M_i)_i$ with a simple gradient descent. 
-The error derivative with regards to intrinsic parameters and camera poses is:
+The error derivative with regards to intrinsic parameters and camera poses has the following structure:
 \newcommand{\der}{\text{d}}
-\begin{equation}
+\begin{equation}\label{eq:jacob}
  \der\s =  \left[\begin{array}{ccccc}
            \J_1 & \L_1 &  0 &  \hdots & 0 \\ 
            \J_i & 0 & \L_i &  \hdots & 0 \\
@@ -90,10 +90,11 @@ The error derivative with regards to intrinsic parameters and camera poses is:
 \end{equation}
 where:
 \begin{itemize}
-\item $\der\xii$ is the change in the intrinsic parameters (dimension $n_\xii$)
- \item $\J_i$ is the derivative of the reprojection of the points of image $i$ with regards to the intrinsic parameters (dimension $(2m)\times n_\xii$)
+\item $\J_i$ is the derivative of the reprojection of the points of image $i$ with regards to the intrinsic parameters (dimension $(2m)\times n_\xii$)
  \item $\L_i$ is the interaction matrix of the reprojection of the points of image $i$ (dimension $(2m)\times 6$)
+ \item $\der\xii$ is the change in the intrinsic parameters (dimension $n_\xii$) 
  \item $\v_i$ is the velocity screw of the estimated camera pose of image $i$ (dimension $6$)
+ \item As a consequence, $\J$ is of dimension $(2mn)\times (n_\xii+6n)$ and $\der\x$ is of dimension  $(n_\xii+6n)$
 \end{itemize}
 The gradient descent allows computing iteratively new values for $\xii$ and $(\M_i)_i$ with:
 \begin{equation}
@@ -112,12 +113,12 @@ The minimization problem is thus the same as \eqref{eq:calib} but is highly simp
 \begin{equation}\label{eq:pose comp}
 \M = \arg\min \norm{\s(\M) - \sd}^2
 \end{equation}The exact same algorithm as for the calibration can thus be used, without having to consider intrinsic parameters or several images.
+\eqref{eq:jacob} is thus simplified to :
+\begin{equation}
+ \der\s =  \L\v
+\end{equation}
 The initial guess for $\M$ still has to be done, but when a new image comes the guess is of course the previous estimation of $\M$ as we assume the image stream 
 correspond to very close poses of the camera.
-
-
-
-
 
 
 \section{Calibration implementation}

@@ -21,7 +21,7 @@ void OnMouseSelect(int evt, int x, int y, int flags, void* click)
 
 int main()
 {
-    cv::VideoCapture cap(0);
+    cv::VideoCapture cap(1);
     cv::Mat im;
     string window = "Camera";
     string prefix = "img";
