@@ -30,8 +30,8 @@ target_link_libraries(calib ${VISP_LIBRARIES})
 add_executable(calibration main/calibration.cpp)
 target_link_libraries(calibration calib)
 
-#add_executable(pose_estim main/pose_estim.cpp)
-#target_link_libraries(pose_estim calib)
+#add_executable(posecomputation main/posecomputation.cpp)
+#target_link_libraries(posecomputation calib)
 
 add_executable(record main/record.cpp)
 target_link_libraries(record ${VISP_LIBRARIES})
