@@ -37,9 +37,9 @@ public:
         // update
         xi_ += _dxi;
         // all parameters should be positive
-        for(unsigned int i=0;i<4;++i)
-            if(xi_[i] < 0)
-                xi_[i] = 0;
+        for(auto &v: xi_)
+            if(v < 0)
+                v = 0;
 
     }
 
@@ -57,6 +57,9 @@ public:
     // we assume the point is already projected in the camera frame
     void computeJacobianIntrinsic(const vpPoint &_P, vpMatrix &_J)
     {
+
+
+
 
     }
 

@@ -12,11 +12,18 @@ class CBTracker
 public:
 
     Size size_;
-    vector<Point> x_, x0_;
+    vector<Point> cog_prev_;
 
     CBTracker(unsigned int r, unsigned int c);
 
-    bool Track(cv::Mat _im, bool _detect = false);
+    bool Detect(cv::Mat &_im, vector<cv::Point> &_cog);
+    bool Track(cv::Mat &_im, vector<cv::Point> &_cog);
+
+private:
+    inline double sqdist(cv::Point &p1, cv::Point &p2)
+    {
+        return (p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y);
+    }
 };
 
 #endif // CBTRACKER_H

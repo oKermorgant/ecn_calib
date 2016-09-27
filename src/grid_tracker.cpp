@@ -1,42 +1,40 @@
-
+#include <grid_tracker.h>
+#include <visp/vpSubColVector.h>
+#include <opencv2/core/core.hpp>
+#include <visp/vpExponentialMap.h>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 #include <visp/vpImageConvert.h>
 #include <algorithm>
-#include <grid_tracker.h>
 
-using namespace std;
-using namespace cv;
-using namespace covis;
 
-bool GridTracker::detect(Mat &_im, vector<Point> &_cog, const bool &_init_tracking)
+bool GridTracker::detect(Mat &_im, vector<Point> &_cog)
 {
     cv::Mat imfind;
     _im.copyTo(imfind);
     if(findDots(imfind, _cog))
         // we know it did not work
         return false;
-    // find correspondance in auto mode
+    // or find correspondance in auto mode
     initAuto(_cog);
 
-    // init tracking?
-    if(_init_tracking)
+    // init tracking
+    vpImageConvert::convert(_im, I_);
+    dots_.resize(_cog.size());
+    vpImagePoint ip;
+    for(unsigned int i=0;i<dots_.size();++i)
     {
-        vpImageConvert::convert(_im, I_);
-        dots_.resize(_cog.size());
-        vpImagePoint ip;
-        for(unsigned int i=0;i<dots_.size();++i)
+        ip.set_uv(_cog[i].x, _cog[i].y);
+        try
         {
-            ip.set_uv(_cog[i].x, _cog[i].y);
-            try
-            {
-                dots_[i].initTracking(I_, ip);
-            }
-            catch(...)
-            {
-                return false;
-            }
+            dots_[i].initTracking(I_, ip);
         }
-        cout << "Dots initialized" <<  endl;
+        catch(...)
+        {
+            return false;
+        }
     }
+    cout << "Dots initialized ok" <<  endl;
     return true;
 }
 

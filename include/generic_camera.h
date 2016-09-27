@@ -21,7 +21,7 @@ public:
 
     virtual void project(const vpPoint &_P, double &_u, double &_v) = 0;
     virtual void computeJacobianIntrinsic(const vpPoint &_P, vpMatrix &_J) = 0;
-    virtual void computeJacobianExtrinsic(const vpPoint &_P, vpMatrix &_J) = 0;
+    virtual void computeJacobianExtrinsic(const vpPoint &_P, vpMatrix &_L) = 0;
     virtual void updateIntrinsic(const vpColVector &_dxi) = 0;
 };
 

@@ -2,6 +2,7 @@
 #define DISTORTION_CAMERA_H
 
 #include <generic_camera.h>
+#include <visp/vpFeaturePoint3D.h>
 
 namespace covis
 {
@@ -77,7 +78,6 @@ public:
         vpFeatureBuilder::create(p_, _P);
         _J = dPdX_ * p_.interaction();
     }
-
 
     // update parameter value
     void updateIntrinsic(const vpColVector &_dxi)

@@ -16,6 +16,7 @@
 #include <grid_tracker.h>
 #include <perspective_camera.h>
 #include <distortion_camera.h>
+#include <cb_tracker.h>
 
 using std::cout;
 using std::endl;
@@ -35,10 +36,11 @@ int main()
     // init empty vector of detected patterns
     vector<Pattern> patterns;
     patterns.clear();
-    patterns.reserve(6);
+    patterns.reserve(36);
 
-    // this tracker detects a 6x6 grid of points
-    GridTracker tracker;
+
+    //GridTracker tracker;      // this tracker detects a 6x6 grid of points
+    CBTracker tracker(8,6);     // this one is to be given the chessboard dimension (8x6)
 
     // read images while the corresponding file exists
     // images are displayed to ensure the detection was performed
@@ -52,7 +54,7 @@ int main()
             testfile.close();
             Pattern pat;
             pat.im =  cv::imread(base + ss.str());
-            tracker.detect(pat.im, pat.point, false);
+            tracker.detect(pat.im, pat.point);
             pat.window = ss.str();
             // draw extraction results
             drawSeq(pat.window, pat.im, pat.point);
@@ -66,16 +68,16 @@ int main()
 
     // create a camera model (Perspective or Distortion)
     // default parameters should be guessed from image dimensions
-    PerspectiveCamera cam(1,1,1,1);
+    //PerspectiveCamera cam(1,1,1,1);   // not a very good guess
 
     // initiate virtual visual servoing with inter-point distance and pattern dimensions
-    VVS vvs(cam, 0.03, 6, 6);
+    VVS vvs(cam, 0.03, 8, 6);
 
     // calibrate from all images
     vvs.calibrate(patterns);
 
     // print results
-
+    cout << "Final calibration: " << cam.xi_.t() << endl;
 
     // this will wait for a key pressed to stop the program
     waitKey(0);

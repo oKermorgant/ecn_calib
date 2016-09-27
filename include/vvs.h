@@ -32,6 +32,7 @@ public:
         r_ = r;
         c_ = c;
         X_.clear();
+        // build 3D points
         for(unsigned int j=0;j<c;++j)
             for(unsigned int i=0;i<r;++i)
                 X_.push_back(vpPoint((i-(r/2.-0.5))*_d,(j-(c/2.-0.5))*_d,0));
@@ -62,7 +63,8 @@ public:
         F_[2].setWorldCoordinates(0, 3*_d, 0);
         F_[3].setWorldCoordinates(0, 0, -3*_d);
 
-        lambda_ = vpAdaptiveGain(2, 0.1,0.1);
+        //lambda_ = vpAdaptiveGain(2, 0.1,0.1);
+        lambda_ = 0.5;
         display_ = false;
 
         // set the camera
@@ -122,16 +124,13 @@ public:
     // display function for only one image
     inline void display(const Pattern &_pat, const vpHomogeneousMatrix &_M, const vpColVector &_s, const unsigned int &_wait = 0)
     {
-        std::vector<Pattern> pat(1);
-        pat[0] = _pat;
-        std::vector<vpHomogeneousMatrix> M(1);
-        M[0] = _M;
+        std::vector<Pattern> pat = {_pat};
+        std::vector<vpHomogeneousMatrix> M = {_M};
         display(pat, M, _s, _wait);
     }
 
-    void calibrate(const std::vector<Pattern> &_pat);
-    void computePose(const Pattern &_pat, vpHomogeneousMatrix &_M);
-
+    void calibrate(std::vector<Pattern> &_pat);
+    void computePose(Pattern &_pat, vpHomogeneousMatrix &_M, const bool &_reset = false);
 
 
 protected:
@@ -165,7 +164,6 @@ protected:
     {
         if(_v.getRows() != 6)
             std::cout << "VVS::updatePosition: wrong number of rows for v (" << _v.getRows() << ")" << std::endl;
-
         else
             _M = vpExponentialMap::direct(_v).inverse() * _M;
     }
@@ -186,7 +184,7 @@ protected:
     cv::Mat imtp_;
 
     // optimization variables
-    vpAdaptiveGain lambda_;
+    double lambda_;
     vpHomogeneousMatrix M0_;
 
     // history for plots
