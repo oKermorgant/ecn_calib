@@ -68,7 +68,7 @@ int main()
 
     // create a camera model (Perspective or Distortion)
     // default parameters should be guessed from image dimensions
-    //PerspectiveCamera cam(1,1,1,1);   // not a very good guess
+    PerspectiveCamera cam(1,1,1,1);   // not a very good guess
 
     // initiate virtual visual servoing with inter-point distance and pattern dimensions
     VVS vvs(cam, 0.03, 8, 6);

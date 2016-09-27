@@ -37,9 +37,9 @@ public:
         // update
         xi_ += _dxi;
         // all parameters should be positive
-        for(auto &v: xi_)
-            if(v < 0)
-                v = 0;
+        for(unsigned int i=0;i<4;++i)
+            if(xi_[i] < 0)
+                xi_[i] = 0;
 
     }
 
