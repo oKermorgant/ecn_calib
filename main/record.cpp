@@ -1,5 +1,5 @@
-#include <opencv2/core.hpp>
-#include <opencv2/highgui.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #include <fstream>
 #include <iostream>
 
@@ -21,7 +21,7 @@ void OnMouseSelect(int evt, int x, int y, int flags, void* click)
 
 int main()
 {
-    cv::VideoCapture cap(1);
+    cv::VideoCapture cap(0);
     cv::Mat im;
     string window = "Camera";
     string prefix = "img";

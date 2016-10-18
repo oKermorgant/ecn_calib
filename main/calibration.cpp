@@ -10,7 +10,7 @@
 #include <visp/vpIoTools.h>
 #include <fstream>
 
-#include <opencv2/ccalib.hpp>
+#include <opencv2/calib3d/calib3d.hpp>
 
 #include <vvs.h>
 #include <grid_tracker.h>

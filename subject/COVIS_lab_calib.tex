@@ -18,7 +18,21 @@ The goal is this lab is to perform camera calibration and pose computation. Do t
  \item OpenCV\footnote{Open source Computer Vision, http://opencv.org} to read images from files or camera, and perform low-level image processing
  \item ViSP\footnote{Visual Servoing Platform, http://visp.inria.fr} to manipulate 3D points, camera pose and use vectors and matrices.
 \end{itemize}
-The actual classes that are used are detailed in Appendix \ref{sec:classes}.
+The actual classes that are used are detailed in Appendix \ref{sec:classes}.\\
+
+\subsection{Environment setup}
+
+To use this lab (and for the next ROS labs) you need to initialize the ROS environment in order to have access to the ViSP library.
+To do so, download the following file and execute it:
+\begin{center}\cppstyle
+\begin{lstlisting}
+        
+        vpHomogeneousMatrix M;
+        P.track(M);
+        double x = P.get_x();
+        double y = P.get_y();
+\end{lstlisting}
+\end{center}
 
 \subsection{The cameras}
 

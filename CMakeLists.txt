@@ -4,7 +4,6 @@ project(ecn_calib)
 
 ## System dependencies are found with CMake's conventions
 find_package(VISP REQUIRED)
-find_package(roscpp REQUIRED)
 add_compile_options(-std=c++11)
 ###########
 
