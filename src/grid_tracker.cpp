@@ -7,8 +7,9 @@
 #include <visp/vpImageConvert.h>
 #include <algorithm>
 
-
-bool GridTracker::detect(Mat &_im, vector<Point> &_cog)
+namespace covis
+{
+bool GridTracker::detect(cv::Mat &_im, vector<cv::Point> &_cog)
 {
     cv::Mat imfind;
     _im.copyTo(imfind);
@@ -40,7 +41,7 @@ bool GridTracker::detect(Mat &_im, vector<Point> &_cog)
 
 
 
-bool GridTracker::track(Mat &_im, vector<cv::Point> &_cog)
+bool GridTracker::track(cv::Mat &_im, vector<cv::Point> &_cog)
 {
     // instead of detecting from nothing, try to
     // convert image
@@ -73,4 +74,5 @@ bool GridTracker::track(Mat &_im, vector<cv::Point> &_cog)
 }
 
 
+}
 

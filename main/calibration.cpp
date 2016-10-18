@@ -23,7 +23,6 @@ using std::endl;
 using std::string;
 using std::vector;
 using std::stringstream;
-
 using cv::waitKey;
 using namespace covis;
 

@@ -6,8 +6,8 @@
 using namespace cv;
 using namespace std;
 
-cv::MouseEventTypes EVT_SAVE = cv::EVENT_LBUTTONDOWN;
-cv::MouseEventTypes EVT_EXIT = cv::EVENT_RBUTTONDOWN;
+const int EVT_SAVE = cv::EVENT_LBUTTONDOWN;
+const int EVT_EXIT = cv::EVENT_RBUTTONDOWN;
 
 
 void OnMouseSelect(int evt, int x, int y, int flags, void* click)

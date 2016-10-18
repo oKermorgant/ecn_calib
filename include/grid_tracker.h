@@ -4,12 +4,14 @@
 #include <visp/vpPoint.h>
 #include <visp/vpHomogeneousMatrix.h>
 #include <opencv2/core/core.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #include <visp/vpDot2.h>
 
+
+namespace covis
+{
 using namespace std;
-using namespace cv;
 
 
 struct dot
@@ -47,8 +49,8 @@ bool findDots(cv::Mat _im, std::vector<cv::Point> &_cog)
     cv::Canny(img, imth, 20, 80, 3);
 
     // contours
-    vector<vector<Point> > contours_tmp, contours;
-    vector<Vec4i> hierarchy;
+    vector<vector<cv::Point> > contours_tmp, contours;
+    vector<cv::Vec4i> hierarchy;
     //  cv::namedWindow("Canny");
     // cv::drawContours(imth, contours_tmp, -1, cv::Scalar(255), 2);
     cv::findContours(imth, contours_tmp, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
@@ -59,7 +61,7 @@ bool findDots(cv::Mat _im, std::vector<cv::Point> &_cog)
     // hierarchy to detect doublons
     unsigned int count = 0;
     vector<dot> dots;
-    Moments mu;
+    cv::Moments mu;
     cv::RotatedRect rect;
     unsigned int i;
 
@@ -76,7 +78,7 @@ bool findDots(cv::Mat _im, std::vector<cv::Point> &_cog)
                 dots.push_back(dot(mu.m10/mu.m00, mu.m01/mu.m00, mu.m00));
                 contours.push_back(contours_tmp[i]);
                 cv::putText(_im, ss.str(), cv::Point2f(mu.m10/mu.m00, mu.m01/mu.m00), 0, 0.5, cv::Scalar(0,0,255), 2);
-                cv::drawContours(_im, contours_tmp, i, Scalar(255, 0, 0), 1, 8);
+                cv::drawContours(_im, contours_tmp, i, cv::Scalar(255, 0, 0), 1, 8);
                 count++;
             }
         }
@@ -133,7 +135,7 @@ bool findDots(cv::Mat _im, std::vector<cv::Point> &_cog)
             double x=0, y=0, a=0;
             for(i=0;i<36;++i)
             {
-                cv::drawContours(_im, contours, candidates[i], Scalar(0, 255, 0), 1, 8);
+                cv::drawContours(_im, contours, candidates[i], cv::Scalar(0, 255, 0), 1, 8);
                 x += dots[candidates[i]].x_;
                 y += dots[candidates[i]].y_;
                 a += dots[candidates[i]].a_;
@@ -173,8 +175,8 @@ bool findDots(cv::Mat _im, std::vector<cv::Point> &_cog)
             if(update)
             {
                 //     cout << "Replacing " << candidates[idx_max] << " with " << others[idx_min] << endl;
-                cv::drawContours(_im, contours, candidates[idx_max], Scalar(0, 0, 255), 2, 8);
-                cv::drawContours(_im, contours, others[idx_min], Scalar(0, 255, 0), 2, 8);
+                cv::drawContours(_im, contours, candidates[idx_max], cv::Scalar(0, 0, 255), 2, 8);
+                cv::drawContours(_im, contours, others[idx_min], cv::Scalar(0, 255, 0), 2, 8);
                 i = candidates[idx_max];
                 candidates[idx_max] = others[idx_min];
                 others[idx_min] = i;
@@ -500,6 +502,8 @@ public:
     vector<vpDot2> dots_;
     vector<bool> visible_;
 };
+
+}
 
 
 #endif // GridTracker_H

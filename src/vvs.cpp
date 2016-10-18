@@ -1,10 +1,7 @@
 
 #include <vvs.h>
 #include <visp/vpSubColVector.h>
-#include <opencv2/core/core.hpp>
 #include <visp/vpExponentialMap.h>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
 
 using namespace covis;
 using std::cout;

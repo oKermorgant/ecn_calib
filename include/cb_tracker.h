@@ -1,7 +1,7 @@
 #ifndef CBTRACKER_H
 #define CBTRACKER_H
 
-#include <opencv2/ccalib.hpp>
+#include <opencv2/calib3d/calib3d.hpp>
 
 namespace covis
 {

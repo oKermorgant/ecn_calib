@@ -4,8 +4,8 @@
 #include <visp/vpPoint.h>
 #include <visp/vpHomogeneousMatrix.h>
 #include <opencv2/core/core.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #include <visp/vpAdaptiveGain.h>
 #include <visp/vpSubMatrix.h>
 #include <visp/vpExponentialMap.h>
