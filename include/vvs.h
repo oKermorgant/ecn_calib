@@ -9,7 +9,6 @@
 #include <visp/vpAdaptiveGain.h>
 #include <visp/vpSubMatrix.h>
 #include <visp/vpExponentialMap.h>
-#include <ros/common.h>
 #include <generic_camera.h>
 
 namespace covis
