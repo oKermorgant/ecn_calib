@@ -18,7 +18,7 @@ add_library(calib SHARED
     include/generic_camera.h
     include/perspective_camera.h
     include/distortion_camera.h
-    include/grid_detection.h include/grid_tracker.h src/grid_tracker.cpp
+    include/grid_tracker.h src/grid_tracker.cpp
     include/cb_tracker.h src/cb_tracker.cpp
     include/vvs.h src/vvs.cpp
     )
