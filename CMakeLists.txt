@@ -4,7 +4,7 @@ project(ecn_calib)
 
 ## System dependencies are found with CMake's conventions
 find_package(VISP REQUIRED)
-add_compile_options(-std=c++11)
+set(CMAKE_CXX_STANDARD 11)
 ###########
 
 ## Specify additional locations of header files

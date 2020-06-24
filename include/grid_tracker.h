@@ -53,7 +53,7 @@ bool findDots(cv::Mat _im, std::vector<cv::Point> &_cog)
     vector<cv::Vec4i> hierarchy;
     //  cv::namedWindow("Canny");
     // cv::drawContours(imth, contours_tmp, -1, cv::Scalar(255), 2);
-    cv::findContours(imth, contours_tmp, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
+    cv::findContours(imth, contours_tmp, hierarchy,cv::RetrievalModes::RETR_TREE,cv::ContourApproximationModes::CHAIN_APPROX_SIMPLE);
       //cv::imshow("Canny", imth);
 
     // cv::waitKey(0);

@@ -62,7 +62,7 @@ void VVS::calibrate(std::vector<Pattern> &_pat)
     unsigned int iter=0;
 
     dx = 1; // set to 1 so that it is higher than minimum error at first
-    while(dx.euclideanNorm() > 0.00001 && iter++ < 100)
+    while(dx.frobeniusNorm() > 0.00001 && iter++ < 100)
     {
         /* first we have to compute for all points from all images:
          * - the pixel coordinates corresponding to the current estimation of intrinsic and extrinsic

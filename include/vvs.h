@@ -168,7 +168,6 @@ protected:
     }
 
 
-
     // 3D points + borders + frame
     unsigned int r_, c_;
     std::vector<vpPoint> X_, B_, F_;
